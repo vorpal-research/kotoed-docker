@@ -8,4 +8,8 @@ RUN sudo systemctl enable postgresql
 RUN sudo mkdir /run/postgresql
 RUN sudo chown postgres:postgres /run/postgresql
 RUN sudo -u postgres /usr/bin/postgresql-check-db-dir "/var/lib/postgres/data"
-CMD sudo -u postgres /usr/bin/pg_ctl -s -D "/var/lib/postgres/data" start -w -t 120 && bash
+COPY start_postgresql.sh /usr/bin/start_postgresql.sh
+RUN sudo chmod +s /usr/bin/start_postgresql.sh
+RUN sudo chmod +x /usr/bin/start_postgresql.sh
+CMD /usr/bin/start_postgresql.sh
+CMD bash
