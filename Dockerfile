@@ -11,6 +11,13 @@ RUN sudo -u postgres /usr/bin/postgresql-check-db-dir "/var/lib/postgres/data"
 COPY start_postgresql.sh /usr/bin/start_postgresql.sh
 RUN sudo chmod +s /usr/bin/start_postgresql.sh
 RUN sudo chmod +x /usr/bin/start_postgresql.sh
-CMD /usr/bin/start_postgresql.sh
+RUN pacman --noconfirm --needed -S git
+RUN pacman --noconfirm --needed -S mercurial
 RUN sudo -u yaourt yaourt --noconfirm --needed -S jdk
 RUN pacman --noconfirm --needed -S maven
+RUN sudo -u yaourt yaourt --noconfirm --needed -S teamcity
+COPY start_teamcity.sh /usr/bin/start_teamcity.sh
+RUN sudo chmod +s /usr/bin/start_teamcity.sh
+RUN sudo chmod +x /usr/bin/start_teamcity.sh
+RUN mkdir kotoed && cd kotoed && hg clone https://bitbucket.org/vorpal-research/kotoed . && mvn dependency:resolve
+RUN rm -rf kotoed
