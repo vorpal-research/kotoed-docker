@@ -21,3 +21,5 @@ RUN sudo chmod +s /usr/bin/start_teamcity.sh
 RUN sudo chmod +x /usr/bin/start_teamcity.sh
 RUN mkdir kotoed && cd kotoed && hg clone https://bitbucket.org/vorpal-research/kotoed . && mvn dependency:resolve
 RUN rm -rf kotoed
+COPY BuildServer.tar.gz /root/
+RUN cd /root && tar xpvzf BuildServer.tar.gz
