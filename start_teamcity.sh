@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-sudo /opt/teamcity/bin/runAll.sh start
+sudo TEAMCITY_SERVER_MEM_OPTS="-Xms64m -Xmx128m" /opt/teamcity/bin/runAll.sh start
