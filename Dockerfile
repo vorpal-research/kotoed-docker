@@ -23,3 +23,18 @@ RUN mkdir kotoed && cd kotoed && hg clone https://bitbucket.org/vorpal-research/
 RUN rm -rf kotoed
 COPY BuildServer.tar.gz /root/
 RUN cd /root && tar xpvzf BuildServer.tar.gz
+
+RUN pacman --noconfirm -S python-pip
+RUN pip install buildbot[bundle]
+
+RUN buildbot create-master -r /root/bb-master
+RUN buildbot-worker create-worker /root/bb-worker localhost:9989 "kotoed-worker" "kotoed-password"
+
+COPY master.cfg /root/bb-master
+COPY 688b3917ff347813631c24e0ebdd3c67.json /root/bb-master
+RUN mkdir /root/hg
+RUN hg clone https://bitbucket.org/vorpal-research/buildbot-dynamic /root/hg/buildbot-dynamic
+
+COPY start_buildbot.sh /usr/bin/start_buildbot.sh
+RUN sudo chmod +s /usr/bin/start_buildbot.sh
+RUN sudo chmod +x /usr/bin/start_buildbot.sh
