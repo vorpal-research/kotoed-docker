@@ -31,6 +31,7 @@ RUN buildbot create-master -r /root/bb-master
 RUN buildbot-worker create-worker /root/bb-worker localhost:9989 "kotoed-worker" "kotoed-password"
 
 COPY master.cfg /root/bb-master
+COPY buildbot.tac /root/bb-worker
 COPY 688b3917ff347813631c24e0ebdd3c67.json /root/bb-master
 RUN mkdir /root/hg
 RUN hg clone https://bitbucket.org/vorpal-research/buildbot-dynamic /root/hg/buildbot-dynamic
