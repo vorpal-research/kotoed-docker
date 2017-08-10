@@ -19,23 +19,14 @@ RUN sudo -u yaourt yaourt --noconfirm --needed -S teamcity
 COPY start_teamcity.sh /usr/bin/start_teamcity.sh
 RUN sudo chmod +s /usr/bin/start_teamcity.sh
 RUN sudo chmod +x /usr/bin/start_teamcity.sh
-RUN mkdir kotoed && cd kotoed && hg clone https://bitbucket.org/vorpal-research/kotoed . && mvn dependency:resolve dependency:resolve-plugins
+RUN hg clone https://bitbucket.org/vorpal-research/kotoed && \
+	cd kotoed && \
+	mvn -pl kotoed-js install && \
+	mvn dependency:resolve dependency:resolve-plugins
 RUN rm -rf kotoed
 COPY BuildServer.tar.gz /root/
 RUN cd /root && tar xpvzf BuildServer.tar.gz
 
-RUN pacman --noconfirm -S python-pip
-RUN pip install buildbot[bundle]
-
-RUN buildbot create-master -r /root/bb-master
-RUN buildbot-worker create-worker /root/bb-worker localhost:9989 "kotoed-worker" "kotoed-password"
-
-COPY master.cfg /root/bb-master
-COPY buildbot.tac /root/bb-worker
-COPY 688b3917ff347813631c24e0ebdd3c67.json /root/bb-master
-RUN mkdir /root/hg
-RUN hg clone https://bitbucket.org/vorpal-research/buildbot-dynamic /root/hg/buildbot-dynamic
-
-COPY start_buildbot.sh /usr/bin/start_buildbot.sh
-RUN sudo chmod +s /usr/bin/start_buildbot.sh
-RUN sudo chmod +x /usr/bin/start_buildbot.sh
+RUN pacman --noconfirm -S python-virtualenv
+RUN hg clone https://bitbucket.org/vorpal-research/kotoed-buildbot-deploy /root/hg/kotoed-buildbot-deploy
+RUN bash /root/hg/kotoed-buildbot-deploy/deploy-buildbot.sh /root/buildbot kotoed-worker kotoed-password
