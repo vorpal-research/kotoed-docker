@@ -27,6 +27,8 @@ RUN rm -rf kotoed
 COPY BuildServer.tar.gz /root/
 RUN cd /root && tar xpvzf BuildServer.tar.gz
 
+RUN true
+
 RUN pacman --noconfirm -S python-virtualenv
 RUN hg clone https://bitbucket.org/vorpal-research/kotoed-buildbot-deploy /root/hg/kotoed-buildbot-deploy
 RUN bash /root/hg/kotoed-buildbot-deploy/deploy-buildbot.sh /root/buildbot kotoed-worker kotoed-password
